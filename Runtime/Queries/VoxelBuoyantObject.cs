@@ -40,8 +40,8 @@ namespace WaterSystem.Physics
         {
             QueryCount = voxels.Length;
             voxelsWS = new Vector3[voxels.Length];
-            _baseDrag = rigidbody.drag;
-            _baseAngularDrag = rigidbody.angularDrag;
+            _baseDrag = rigidbody.linearDamping;
+            _baseAngularDrag = rigidbody.angularDamping;
         }
 
         private void FixedUpdate()
@@ -187,8 +187,8 @@ namespace WaterSystem.Physics
         
         private void UpdateDrag()
         {
-            rigidbody.drag = _baseDrag + _baseDrag * (_buoyantForce.Submerged * 10f);
-            rigidbody.angularDrag = _baseAngularDrag + _baseAngularDrag * (_buoyantForce.Submerged * 4f);
+            rigidbody.linearDamping = _baseDrag + _baseDrag * (_buoyantForce.Submerged * 10f);
+            rigidbody.angularDamping = _baseAngularDrag + _baseAngularDrag * (_buoyantForce.Submerged * 4f);
         }
         
         private void LocalToWorld()

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 using WaterSystem.Settings;
 using WaterSystem.Rendering;
 #if UNITY_2023_3_OR_NEWER || RENDER_GRAPH_ENABLED // RenderGraph
 using UnityEngine.Experimental.Rendering;
-using UnityEngine.Experimental.Rendering.RenderGraphModule;
+
 #endif
 
 namespace WaterSystem.Rendering
@@ -83,7 +84,7 @@ namespace WaterSystem.Rendering
         }
 
 #if UNITY_2023_3_OR_NEWER || RENDER_GRAPH_ENABLED // RenderGraph
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer contextContainer)
+        public override void RecordRenderGraph(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, ContextContainer contextContainer)
         {
             // populate pass data for each water body and call RenderRG
             foreach (var waterBody in WaterManager.WaterBodies)
@@ -106,7 +107,7 @@ namespace WaterSystem.Rendering
             }
         }
 
-        private void RenderRG(RenderGraph renderGraph, PassData inputData, Camera camera, UniversalResourceData resourceData)
+        private void RenderRG(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, PassData inputData, Camera camera, UniversalResourceData resourceData)
         {
             using (var builder = renderGraph.AddRasterRenderPass<PassData>(nameof(WaterCaustics), out var passData, profilingSampler))
             {
@@ -117,13 +118,13 @@ namespace WaterSystem.Rendering
                 builder.AllowPassCulling(false);
                 
                 // set buffers
-                builder.UseTextureFragment(resourceData.activeColorTexture, 0);
-                builder.UseTextureFragmentDepth(resourceData.activeDepthTexture, IBaseRenderGraphBuilder.AccessFlags.Read);
+                builder.SetRenderAttachment (resourceData.activeColorTexture, 0);
+                builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
 
                 // set depthtexture read for the shader
                 builder.UseTexture(resourceData.cameraDepthTexture);
                 
-                builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                builder.SetRenderFunc((PassData data, UnityEngine.Rendering.RenderGraphModule.RasterGraphContext context) =>
                 {
                     if(data.data.m_mesh != null || data.data.WaterCausticMaterial != null)
                         context.cmd.DrawMesh(data.data.m_mesh, data.data.matrix, data.data.WaterCausticMaterial, 0, 0);

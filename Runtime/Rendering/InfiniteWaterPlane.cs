@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using WaterSystem.Settings;
 #if UNITY_2023_3_OR_NEWER || RENDER_GRAPH_ENABLED // RenderGraph
-using UnityEngine.Experimental.Rendering.RenderGraphModule;
+
 #endif
 
 namespace WaterSystem.Rendering
@@ -53,7 +53,7 @@ namespace WaterSystem.Rendering
         
 #if UNITY_2023_3_OR_NEWER || RENDER_GRAPH_ENABLED // RenderGraph
         
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer contextContainer)
+        public override void RecordRenderGraph(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, ContextContainer contextContainer)
         {
             UniversalCameraData cameraData = contextContainer.Get<UniversalCameraData>();
             
@@ -65,10 +65,11 @@ namespace WaterSystem.Rendering
                 
                 UniversalResourceData resourceData = contextContainer.Get<UniversalResourceData>();
                 
-                builder.UseTextureFragment(resourceData.cameraColor, 0);
-                builder.UseTextureFragmentDepth(resourceData.cameraDepth, 0);
                 
-                builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                builder.SetRenderAttachment(resourceData.cameraColor, 0);
+                builder.SetRenderAttachmentDepth(resourceData.cameraDepth, 0);
+                
+                builder.SetRenderFunc((PassData data, UnityEngine.Rendering.RenderGraphModule.RasterGraphContext context) =>
                 {
                     context.cmd.DrawMesh(data.InfiniteMesh, data.Matrix, data.InfiniteMaterial, 0, 0,
                         data.MPB);

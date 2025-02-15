@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
-using UnityEngine.Experimental.Rendering.RenderGraphModule;
+
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RendererUtils;
 using UnityEngine.Rendering.Universal;
@@ -96,14 +96,14 @@ namespace WaterSystem.Rendering
         private class PassData
         {
             // one for RG
-            public RendererListHandle renderListHdl;
+            public UnityEngine.Rendering.RenderGraphModule.RendererListHandle renderListHdl;
             // one for non-RG
             public RendererList renderList;
             // clear color
             public Color clearColor;
         }
 
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer contextContainer)
+        public override void RecordRenderGraph(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, ContextContainer contextContainer)
         {
             UniversalCameraData cameraData = contextContainer.Get<UniversalCameraData>();
             // Textures
@@ -127,13 +127,13 @@ namespace WaterSystem.Rendering
                 passData.renderListHdl = renderGraph.CreateRendererList(renderListDesc);
                 builder.UseRendererList(passData.renderListHdl);
                 
-                builder.UseTextureFragment(bufferA, 0);
-                builder.UseTextureFragment(bufferB, 1);
+                builder.SetRenderAttachment (bufferA, 0);
+                builder.SetRenderAttachment (bufferB, 1);
                 
                 //UniversalResourceData frameResources = contextContainer.Get<UniversalResourceData>();
                 //builder.UseTextureFragmentDepth(frameResources.cameraDepth, IBaseRenderGraphBuilder.AccessFlags.None);
                 
-                builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                builder.SetRenderFunc((PassData data, UnityEngine.Rendering.RenderGraphModule.RasterGraphContext context) =>
                 {
                     //context.cmd.ClearRenderTarget(false, true, data.clearColor);
                     context.cmd.DrawRendererList(data.renderListHdl);

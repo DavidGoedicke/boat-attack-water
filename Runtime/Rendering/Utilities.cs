@@ -2,9 +2,10 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 #if UNITY_2022_3_OR_NEWER
-using UnityEngine.Experimental.Rendering.RenderGraphModule;
+
 #endif
 using WaterSystem.Settings;
 
@@ -204,13 +205,13 @@ namespace WaterSystem.Rendering
 #if UNITY_2023_3_OR_NEWER || RENDER_GRAPH_ENABLED // RenderGraph
         public class WaterResourceData : ContextItem
         {
-            public TextureHandle BufferA;
-            public TextureHandle BufferB;
+            public UnityEngine.Rendering.RenderGraphModule.TextureHandle BufferA;
+            public UnityEngine.Rendering.RenderGraphModule.TextureHandle BufferB;
             
             public override void Reset()
             {
-                BufferA = TextureHandle.nullHandle;
-                BufferB = TextureHandle.nullHandle;
+                BufferA = UnityEngine.Rendering.RenderGraphModule.TextureHandle.nullHandle;
+                BufferB = UnityEngine.Rendering.RenderGraphModule.TextureHandle.nullHandle;
             }
         }
 #endif
@@ -275,32 +276,36 @@ namespace WaterSystem.Rendering
         private class PassData
         {
             public string name;
-            public TextureHandle texture;
+            public UnityEngine.Rendering.RenderGraphModule.TextureHandle texture;
         }
 
         private static ProfilingSampler setTextureSampler = new ProfilingSampler("GlobalSetTexture");
 
-        public static void SetGlobalTexture(RenderGraph graph, string name, TextureHandle texture,
+        public static void SetGlobalTexture(UnityEngine.Rendering.RenderGraphModule.RenderGraph graph, string name, UnityEngine.Rendering.RenderGraphModule.TextureHandle texture,
             string passName = "Set Global Texture")
         {
             using (var builder = graph.AddRasterRenderPass<PassData>(passName, out var passData, setTextureSampler))
             {
-                passData.texture = builder.UseTexture(texture);
+                
+                //passData.texture = builder.UseTexture(texture);
+                builder.UseTexture(texture);
+                passData.texture = texture;
                 passData.name = name;
 
                 builder.AllowPassCulling(false);
                 builder.AllowGlobalStateModification(true);
 
-                builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                builder.SetRenderFunc((PassData data, UnityEngine.Rendering.RenderGraphModule.RasterGraphContext context) =>
                 {
                     context.cmd.SetGlobalTexture(data.name, data.texture);
                 });
             }
         }
         
-        public static TextureHandle CreateRenderGraphTexture(RenderGraph renderGraph, RenderTextureDescriptor desc, string name, bool clear,
+        public static UnityEngine.Rendering.RenderGraphModule.TextureHandle CreateRenderGraphTexture(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, RenderTextureDescriptor desc, string name, bool clear,
             FilterMode filterMode = FilterMode.Point, TextureWrapMode wrapMode = TextureWrapMode.Clamp, Color clearColor = default)
         {
+            
             TextureDesc rgDesc = new TextureDesc(desc.width, desc.height);
             rgDesc.dimension = desc.dimension;
             rgDesc.clearBuffer = clear;
@@ -335,7 +340,7 @@ namespace WaterSystem.Rendering
                 // N/A
             }
 
-            public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer container)
+            public override void RecordRenderGraph(UnityEngine.Rendering.RenderGraphModule.RenderGraph renderGraph, ContextContainer container)
             {
                 using (var builder = renderGraph.AddRasterRenderPass<PassData>(_passName, out _, profilingSampler))
                 {
@@ -345,7 +350,7 @@ namespace WaterSystem.Rendering
                     builder.UseTexture(resourceData.BufferA);
                     builder.UseTexture(resourceData.BufferB);
 
-                    builder.SetRenderFunc((PassData _, RasterGraphContext _) => { });
+                    builder.SetRenderFunc((PassData _, UnityEngine.Rendering.RenderGraphModule.RasterGraphContext _) => { });
                 }
             }
 
