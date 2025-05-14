@@ -17,7 +17,7 @@ namespace WaterSystem.Physics
             var t = transform;
             var vec  = t.position;
             vec.y = _surface.Position.y;
-            t.position = vec;
+            t.position = Vector3.Slerp( t.position, vec, Time.deltaTime);;
             var up = t.up;
             t.up = Vector3.Slerp(up, _surface.Normal, Time.deltaTime);
         }

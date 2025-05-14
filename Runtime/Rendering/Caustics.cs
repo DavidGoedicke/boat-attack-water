@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.RenderGraphModule;
+//using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 using WaterSystem.Settings;
 using WaterSystem.Rendering;
@@ -119,7 +119,7 @@ namespace WaterSystem.Rendering
                 
                 // set buffers
                 builder.SetRenderAttachment (resourceData.activeColorTexture, 0);
-                builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
+                builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture);
 
                 // set depthtexture read for the shader
                 builder.UseTexture(resourceData.cameraDepthTexture);

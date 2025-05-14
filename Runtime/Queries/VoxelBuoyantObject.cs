@@ -25,12 +25,13 @@ namespace WaterSystem.Physics
         private float _baseDrag;
         private float _baseAngularDrag;
         
-        private const int MaxVoxels = 4096;
+        private const int MaxVoxels = 4096*100;
 
         private void OnValidate() // TODO clean hack this up
         {
             if (Mathf.Abs(voxelSpacing - voxelSpacingOld) > math.EPSILON)
             {
+                Debug.Log("UpdatingVoxels!");
                 voxels = SliceIntoVoxels(transform, rigidbody, voxelSpacing, out volume, out localArchimedesForce);
                 voxelSpacingOld = voxelSpacing;
             }
@@ -72,6 +73,7 @@ namespace WaterSystem.Physics
                     Position = voxelsWS[i],
                     InstanceID = WaterQueryId
                 };
+                Debug.DrawRay(voxelsWS[i],Vector3.up,Color.blue);
             }
         }
 
@@ -131,9 +133,9 @@ namespace WaterSystem.Physics
                 }
                 var voxelCount = math.ceil(boundSize / voxelSpacing);
                 var quantizedMaxDistance = voxelCount * voxelSpacing;
-                
+              
                 if(math.pow(voxelCount, 3) > MaxVoxels)
-                    throw new Exception("Too many voxels! Reduce voxel spacing");
+                    throw new Exception($"Too many voxels! Reduce voxel spacing{voxelCount}");
 
                 for (var x = startOffset; x < quantizedMaxDistance; x += voxelSpacing)
                 {

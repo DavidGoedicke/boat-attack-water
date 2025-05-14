@@ -33,6 +33,7 @@ namespace WaterSystem.Physics
                 pos.Position = transform.TransformPoint(pos.Position);
                 pos.InstanceID = WaterQueryId;
                 positions[i] = pos;
+                Debug.DrawRay(transform.TransformPoint(pos.Position),Vector3.up,Color.red);
             }
         }
 
