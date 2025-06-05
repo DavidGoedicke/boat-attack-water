@@ -81,12 +81,12 @@ namespace WaterSystem.Physics
         {
             _surfaceResults = surfaceResults;
             
-            for (int i = 0; i < _surfaceResults.Length; i++)
-            {
-                var surfaceResult = _surfaceResults[i];
-                surfaceResult.Position = float3.zero;
-                _surfaceResults[i] = surfaceResult;
-            }
+           // for (int i = 0; i < _surfaceResults.Length; i++)
+         //   {
+           //     var surfaceResult = _surfaceResults[i];
+           //     surfaceResult.Position = float3.zero;
+           //     _surfaceResults[i] = surfaceResult;
+           // }
         }
         
         #endregion
