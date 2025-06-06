@@ -93,8 +93,8 @@ namespace WaterSystem
         {
             if(!Modifiers.ContainsKey(typeof(GerstnerWaves.Data)))
                 Modifiers.Add(typeof(GerstnerWaves.Data) , gerstnerData);
-            //if(!Modifiers.ContainsKey(typeof(Depth.DepthData))) // TODO - add back once work done here for better depth setup.
-            //    Modifiers.Add(typeof(Depth.DepthData) , depthData);
+           // if(!Modifiers.ContainsKey(typeof(Depth.DepthData))) // TODO - add back once work done here for better depth setup.
+            //   Modifiers.Add(typeof(Depth.DepthData) , depthData);
         }
 
         public override Type[] GetModifierTypes()
