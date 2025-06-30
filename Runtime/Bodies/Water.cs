@@ -181,8 +181,8 @@ namespace WaterSystem
             _meshSettings = new MeshSurface.WaterMeshSettings
             {
                 maxWaveHeight = 10f, // TODO - hardcoded values, these should be calculated based on the water settings?
-                maxDivisions = 5, // TODO - hardcoded values, these should be settings in project settings
-                density = 0.15f
+                maxDivisions = 6, //5 // TODO - hardcoded values, these should be settings in project settings was
+                density = 0.10f //0.15
             };
 
             switch (shape.type)
@@ -190,7 +190,7 @@ namespace WaterSystem
                 case WaterShapeType.Infinite:
                     _meshSettings.infinite = true;
                     _meshSettings.size = new float2(settings.distanceBlend * 2f, 0f);
-                    _meshSettings.baseTileSize = 20;
+                    _meshSettings.baseTileSize = 12;//20
                     break;
                 case WaterShapeType.Plane:
                     _meshSettings.infinite = false;
